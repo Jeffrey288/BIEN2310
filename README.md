@@ -20,4 +20,8 @@ Focus: chemical kinetics
 - Brain Drug
 
 ## Homework 5
-Focus: 
+Focus: second order ODEs & partial differential equations
+- Rockets (IVP, BVP: shooting / finite difference)
+- Force Directed Graph
+- Dye River
+- Heat Rod
