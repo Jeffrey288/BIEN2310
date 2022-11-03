@@ -4,7 +4,7 @@ function tau = solarIVP_20851871(R0, v0, showplot)
 
 GM = 2.96e-4; % (AU^3 / d^2)
 
-opt = odeset('RelTol', 1e-10, 'Events', @completeCycle); 
+opt = odeset('RelTol', 1e-6, 'Events', @completeCycle); 
 
 % Use ode45 to solve ODE. 
 % Set return value tau
