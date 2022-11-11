@@ -1,0 +1,26 @@
+function NN = rabbitHistogram_HartantoKwee_jeffrey(m, p, d, K)
+
+% rabbitHistogram_HartantoKwee_jeffrey(60, 1/30, 800, 100)
+
+NN = zeros(K, 1);
+
+for i=1:K
+    NN(i) = rabbit_HartantoKwee_Jeffrey(m,p,d,false);
+end
+
+histogram(NN, 10, 'Normalization', 'pdf')
+hold on;
+for i=1:4
+pd = [fitdist(NN, 'Normal');
+    fitdist(NN, 'Log-Normal');
+    fitdist(NN, 'Gamma');
+    fitdist(NN, 'Nagakami')]
+
+nn = linspace(1, max(NN), 100);
+probs = pdf(pd, nn);
+plot(nn, probs, 'b-')
+end
+legends('Histogram', Normal', 'Log-Normal', 'Gamma', 'Nagakami'])
+hold off;
+
+end
