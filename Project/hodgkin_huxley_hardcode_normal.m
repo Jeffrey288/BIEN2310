@@ -12,7 +12,7 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
 
 %   For this model, the time scale is ms
 
-    Cm = 1 * 1e-3; % uF/cm^2
+    Cm = 1; % uF/cm^2
     gKmax = 35; % mS/cm^2
     gNamax = 40; % mS/cm^2 
     gL = 0.3; % mS/cm^2
@@ -30,6 +30,7 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
                     initR(3)/(initR(3)+initR(4));  ...
                     initR(5)/(initR(5)+initR(6))
                 ];
+%         initU(3) = 1/(1+exp(options.Vm0-(-65)*6.2));
         initX = [options.Vm0; initU];
     end
 
@@ -58,18 +59,22 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
         return;
     end
 
-    figure(1)
-    plot(tt, arrayfun(I_t, tt), "c-");
-    title("Injected Current", "Interpreter", "latex")
-    xlabel("time (ms)")
-    ylabel("injected current (mA/mm^2)")
+%     figure(1)
+%     plot(tt, arrayfun(I_t, tt), "c-");
+%     title("Injected Current", "Interpreter", "latex")
+%     xlabel("time (ms)")
+%     ylabel("injected current (A/cm^2)")
     figure(2)
     plot(tt, XX(:, 1), "b-")
+    hold on;
+    plot(tt, ones(length(tt)) * -62.8, "g--")
+    hold off;
     title("Membrane Voltage", "Interpreter", "latex")
     subtitle(sprintf("spike frequency = %.1f ms", period), "Interpreter", "latex")
     xlabel("time (ms)")
     ylabel("membrane potential difference (mV)")
     ylim([-80, 40])
+    return;
     figure(3)
     plot(tt, XX(:, 2), "r-")
     hold on;
@@ -88,25 +93,24 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
     subplot(2,1,2);
     title("Potassium Ion Current", "Interpreter", "latex")
     xlabel("time (ms)")
-    ylabel("Current (nA/mm^2)")
+    ylabel("Current (A/cm^2)")
     legend("$I_K$", "Interpreter", "latex")
     plot(tt, I_Na, "m-")
     legend("$I_{Na}$", "Interpreter", "latex")
     title("Sodium Ion Current", "Interpreter", "latex")
     xlabel("time (ms)")
-    ylabel("Current (nA/mm^2)")
+    ylabel("Current (A/cm^2)")
     hold off;
     
     function Xdot = simX(t, X)
 
         Vm = X(1); % mV
         U = X(2:4);
-        I_K = gKmax * (U(1) .^ 4) * (Vm - VK); % nA/mm^2 = uS/mm^2 * dimless * mV
+        I_K = gKmax * (U(1) .^ 4) * (Vm - VK); % uA/cm^2 = mS/cm^2 * dimless * mV
         I_Na = gNamax * (U(2) .^ 3) * U(3) * (Vm - VNa);
         I_L = gL * (Vm - VL);
         I_ion = I_K + I_Na + I_L;
-        Vmdot = (I_t(t) * 1e6 - I_ion) / Cm / 1000; % mA/mm^2 / F/mm^2 = V/s
-        % V/s -> V/ms: / 1000
+        Vmdot = (I_t(t) - I_ion) / Cm; % uA/cm^2 / uF/cm^2 = V/s -> mV/ms
  
         R = getR(Vm);
         Udot = R(1:2:5) .* (1 - U) - R(2:2:6) .* U;
@@ -123,7 +127,9 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
         alpha_m = 0.182*(Vm+35)/(1-exp(-(Vm+35)/9));
         beta_m = -0.124*(Vm+35)/(1-exp((Vm+35)/9)); 
         alpha_h = 0.25*exp(-(Vm+90)/12);
-        beta_h = 0.25*exp((Vm+62)/6)/exp((Vm+90)/12);       
+        beta_h = 0.25*exp((Vm+62)/6)/exp((Vm+90)/12);    
+%         alpha_h = 0.024*(Vm+50)/(1-exp(-(Vm+50)/5));
+%         beta_h = -0.0091*(Vm+75)/(1-exp((Vm+75)/5));
         R = [alpha_n; beta_n; alpha_m; beta_m; alpha_h; beta_h]; % 1/ms
     end
     
