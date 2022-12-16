@@ -90,11 +90,11 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
     I_Na = gNamax * (XX(:, 3) .^ 3) .* XX(:, 4) .* (XX(:, 1) - VNa);
     subplot(2,1,1);
     plot(tt, I_K, "g-")
-    subplot(2,1,2);
     title("Potassium Ion Current", "Interpreter", "latex")
     xlabel("time (ms)")
     ylabel("Current (A/cm^2)")
     legend("$I_K$", "Interpreter", "latex")
+    subplot(2,1,2);
     plot(tt, I_Na, "m-")
     legend("$I_{Na}$", "Interpreter", "latex")
     title("Sodium Ion Current", "Interpreter", "latex")

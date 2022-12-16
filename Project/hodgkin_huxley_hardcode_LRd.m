@@ -23,29 +23,13 @@ function res = hodgkin_huxley_hardcode_LRd(tf, I_t, params, options)
     initX(2) = 4e-4;
 
     if (options.accuracy == 0)
-        opt = odeset('MaxStep', 0.3);
+        opt = odeset('RelTol', 1e-5, 'MaxStep', 0.3);
     elseif (options.accuracy == 1)
         opt = odeset('RelTol', 1e-5, 'MaxStep', 0.2);
     else
         opt = odeset('RelTol', 1e-7, 'MaxStep', 0.1);
     end
     [tt, XX] = ode15s(@simX, [0, tf], initX, opt);
-
-    % find the period
-%     ind = islocalmax(XX(:, 1)) .* (XX(:,1) > 0); % element-wise and
-    ind = islocalmax(XX(:, 1)) .* (XX(:,1) > 15); % element-wise and
-    t_spikes = tt(logical(ind));
-    if (length(t_spikes) <= 1)
-        period = NaN;
-    else
-        l = length(t_spikes);
-        period = mean(t_spikes(2:l) - t_spikes(1:(l-1)));
-    end
-    
-    if (options.getFreq)
-        res = 1 / period * 1000;
-        return;
-    end
 
 %     figure(1)
 %     plot(tt, arrayfun(I_t, tt), "c-");
@@ -55,8 +39,8 @@ function res = hodgkin_huxley_hardcode_LRd(tf, I_t, params, options)
 
     figure(1)
     plot(tt, XX(:, 1), "b-")
-    title("Original HH: Membrane Voltage", "Interpreter", "latex")
-    subtitle(sprintf("spike period = %.1f ms", period), "Interpreter", "latex")
+    title("Luo-Rudy Passive Cardiac Myocyte Model", "Interpreter", "latex")
+%     subtitle(sprintf("spike period = %.1f ms", period), "Interpreter", "latex")
     xlabel("time (ms)")
     ylabel("membrane potential difference (mV)")
     ylim([-30, 130])
@@ -152,10 +136,10 @@ function res = hodgkin_huxley_hardcode_LRd(tf, I_t, params, options)
         fdot = alpha_f * (1 - f) - beta_f * f;
         Xdot = alpha_X * (1 - X) - beta_X * f;
         Kidot = alpha_Ki * (1 - Ki) - beta_Ki * Ki;
-        XXdot = [Vdot; Ca_conc_dot; hdot; jjdot; mdot; ddot; fdot; Xdot; Kidot];
-%         if (~isreal(XXdot))
-%             pause;
-%         end
+        XXdot = real([Vdot; Ca_conc_dot; hdot; jjdot; mdot; ddot; fdot; Xdot; Kidot]);
+        if (~isreal(XXdot))
+            pause;
+        end
 %         pause;
 
     end

@@ -59,47 +59,48 @@ function res = hodgkin_huxley_hardcode_original(tf, I_t, params, options)
         return;
     end
 
-%     figure(1)
-%     plot(tt, arrayfun(I_t, tt), "c-");
-%     title("Injected Current", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("injected current (A/cm^2)")
-
     figure(1)
+    plot(tt, arrayfun(I_t, tt), "c-");
+    title("Injected Current", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("injected current (A/cm^2)")
+
+    figure(2)
     plot(tt, XX(:, 1), "b-")
     title("Original HH: Membrane Voltage", "Interpreter", "latex")
     subtitle(sprintf("spike period = %.1f ms", period), "Interpreter", "latex")
     xlabel("time (ms)")
     ylabel("membrane potential difference (mV)")
     ylim([-30, 130])
-%     return;
-%     figure(3)
-%     plot(tt, XX(:, 2), "r-")
-%     hold on;
-%     plot(tt, XX(:, 3), "g-")
-%     plot(tt, XX(:, 4), "m-")
-%     legend("$n$", "$m$", "$h$", "Interpreter", "latex")
-%     title("Subunit Activations", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("subunit activation")
-%     hold off;
-%     figure(4)
-%     I_K = gKmax * (XX(:, 2) .^ 4) .* (XX(:, 1) - VK);
-%     I_Na = gNamax * (XX(:, 3) .^ 3) .* XX(:, 4) .* (XX(:, 1) - VNa);
-%     subplot(2,1,1);
-%     plot(tt, I_K, "g-")
-%     subplot(2,1,2);
-%     title("Potassium Ion Current", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("Current (A/cm^2)")
-%     legend("$I_K$", "Interpreter", "latex")
-%     plot(tt, I_Na, "m-")
-%     legend("$I_{Na}$", "Interpreter", "latex")
-%     title("Sodium Ion Current", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("Current (A/cm^2)")
-%     hold off;
-%     
+
+    figure(3)
+    plot(tt, XX(:, 2), "r-")
+    hold on;
+    plot(tt, XX(:, 3), "g-")
+    plot(tt, XX(:, 4), "m-")
+    legend("$n$", "$m$", "$h$", "Interpreter", "latex")
+    title("Subunit Activations", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("subunit activation")
+    hold off;
+    
+    figure(4)
+    I_K = gKmax * (XX(:, 2) .^ 4) .* (XX(:, 1) - VK);
+    I_Na = gNamax * (XX(:, 3) .^ 3) .* XX(:, 4) .* (XX(:, 1) - VNa);
+    subplot(2,1,1);
+    plot(tt, I_K, "g-")
+    title("Potassium Ion Current", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("Current (A/cm^2)")
+    legend("$I_K$", "Interpreter", "latex")
+    subplot(2,1,2);
+    plot(tt, I_Na, "m-")
+    legend("$I_{Na}$", "Interpreter", "latex")
+    title("Sodium Ion Current", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("Current (A/cm^2)")
+    hold off;
+
     function Xdot = simX(t, X)
 
         Vm = X(1); % mV

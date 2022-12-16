@@ -67,22 +67,22 @@ function II = hodgkin_huxley_hardcode_voltage_clamp(tf, V_t, params, options)
     ylabel("subunit activation")
     hold off;
 
-%     figure(4)
-%     I_K = gKmax * (XX(:, 2) .^ 4) .* (XX(:, 1) - VK);
-%     I_Na = gNamax * (XX(:, 3) .^ 3) .* XX(:, 4) .* (XX(:, 1) - VNa);
-%     subplot(2,1,1);
-%     plot(tt, I_K, "g-")
-%     subplot(2,1,2);
-%     title("Potassium Ion Current", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("Current (nA/mm^2)")
-%     legend("$I_K$", "Interpreter", "latex")
-%     plot(tt, I_Na, "m-")
-%     legend("$I_{Na}$", "Interpreter", "latex")
-%     title("Sodium Ion Current", "Interpreter", "latex")
-%     xlabel("time (ms)")
-%     ylabel("Current (nA/mm^2)")
-%     hold off;
+    figure(4)
+    I_K = gKmax * (UU(:, 1) .^ 4) .* (V_t(tt) - VK);
+    I_Na = gNamax * (UU(:, 2) .^ 3) .* UU(:, 3) .* (V_t(tt) - VNa);
+    subplot(2,1,1);
+    plot(tt, I_K, "g-")
+    subplot(2,1,2);
+    title("Potassium Ion Current", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("Current (nA/mm^2)")
+    legend("$I_K$", "Interpreter", "latex")
+    plot(tt, I_Na, "m-")
+    legend("$I_{Na}$", "Interpreter", "latex")
+    title("Sodium Ion Current", "Interpreter", "latex")
+    xlabel("time (ms)")
+    ylabel("Current (nA/mm^2)")
+    hold off;
     
     function res = dVdt(t)
         if (options.step)
