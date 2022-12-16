@@ -70,7 +70,7 @@ function res = hodgkin_huxley_hardcode_normal(tf, I_t, params, options)
     plot(tt, ones(length(tt)) * -62.8, "g--")
     hold off;
     title("Membrane Voltage", "Interpreter", "latex")
-    subtitle(sprintf("spike frequency = %.1f ms", period), "Interpreter", "latex")
+    subtitle(sprintf("spike period = %.1f ms", period), "Interpreter", "latex")
     xlabel("time (ms)")
     ylabel("membrane potential difference (mV)")
     ylim([-80, 40])

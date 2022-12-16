@@ -14,7 +14,7 @@
 %     ]...
 % ])
 
-hodgkin_huxley_hardcode_voltage_clamp(100, @(x) -65 + (x > 20) * (65 - 45), NaN)
+% hodgkin_huxley_hardcode_voltage_clamp(100, @(x) -65 + (x > 20) * (65 - 45), NaN)
 
 % Parameters adapted from
 % https://neuronaldynamics.epfl.ch/online/Ch2.S2.html
@@ -36,17 +36,41 @@ hodgkin_huxley_hardcode_voltage_clamp(100, @(x) -65 + (x > 20) * (65 - 45), NaN)
 
 % hodgkin_huxley_hardcode_normal(300, @I_step, [0, 1, 2], "Vm0", -65);
 
-function I = I_const(t)
-    I = 0; % 2.7 uA/cm^2 -> 2.7e-5 mA/cm^2
-end
 
-function I = I_step(t)
-    if (t >= 20)
-        I = 0.31e-6; % aspecify in terms of mA/mm^2
-    else 
-        I = 0;
-    end
-end
+% function I = I_const(t)
+%     I = 0; % 2.7 uA/cm^2 -> 2.7e-5 mA/cm^2
+% end
+% 
+% function I = I_step(t)
+%     if (t >= 20)
+%         I = 0.31e-6; % aspecify in terms of mA/mm^2
+%     else 
+%         I = 0;
+%     end
+% end
+
+I_i = 7.47; % in uA/cm^2
+accuracy = 0; % try I_i = 0.37 with Fast and you'll know why I added this
+tf = 600; % in ms
+I_step = @(t) ((t > 20) * (t < 180)) * 15; % the injection current has the unit uA/cm^2
+% hodgkin_huxley_hardcode_original(tf, @(t) (t > 20) * 7.45, NaN, "Vm0", 0, 'accuracy', 0);
+% hodgkin_huxley_hardcode_original(tf, I_step, NaN, "Vm0", 0, 'accuracy', accuracy);
+hodgkin_huxley_hardcode_LRd(tf, I_step, NaN, 'accuracy', accuracy);
+
+% N = 50; % number of points to calculate
+% Imax = 20; % range of amplitude to try
+% II = linspace(0, Imax, N);
+% freq = zeros(N, 1);
+% for i = 1:N
+%     I_step = @(t) (t > 20) * II(i);
+%     freq(i) = hodgkin_huxley_hardcode_original(300, I_step, NaN, "Vm0", 0, 'accuracy', 1, 'getFreq', true);
+% end
+% figure(1);
+% plot(II, freq, "b-");
+% title("Spike Frequency vs Injected Current")
+% xlabel("injected current (mA/mm^2)")
+% ylabel("frequency (Hz)")
+% ylim([0, 100])
 
 % https://neuronaldynamics.epfl.ch/online/Ch2.S2.html
 % https://bernstein-network.de/wp-content/uploads/2021/02/04_Lecture-04-Hodgkin-Huxley-model.pdf
